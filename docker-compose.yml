@@ -1,0 +1,36 @@
+version: "3.7"
+
+services:
+  simple-elasticsearch:
+    image: simple-elasticsearch
+    container_name: simple-elasticsearch
+    build:
+      context: ./docker/elasticsearch
+      dockerfile: Dockerfile
+    networks:
+      - simple-elasticsearch-network
+    ports:
+      - 9200:9200
+      - 9300:9300
+    env_file: .elasticsearch.env
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+
+  simple-kibana:
+    image: simple-kibana
+    container_name: simple-kibana
+    build:
+      context: ./docker/kibana
+      dockerfile: Dockerfile
+    networks:
+      - simple-elasticsearch-network
+    env_file: .kibana.env
+    ports:
+      - 5601:5601
+
+networks:
+  simple-elasticsearch-network:
+    name: simple-elasticsearch-network
+    driver: bridge
